@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Team a:</strong>
+  <%= @game.team_a %>
+</p>
+
+<p>
+  <strong>Team b:</strong>
+  <%= @game.team_b %>
+</p>
+
+<p>
+  <strong>Team a score:</strong>
+  <%= @game.team_a_score %>
+</p>
+
+<p>
+  <strong>Team b score:</strong>
+  <%= @game.team_b_score %>
+</p>
+
+<p>
+  <strong>tournament:</strong>
+  <%= @game.tournament_id %>
+</p>
+
+<p>
+  <strong>Level:</strong>
+  <%= @game.level %>
+</p>
+
+<%= link_to 'Edit', edit_game_path(@game) %> |
+<%= link_to 'Back', games_path %>
