@@ -5,7 +5,7 @@ class GameTournament < ApplicationRecord
 
   has_many :groups, dependent: :destroy
   has_many :games, dependent: :destroy
-  validates_uniqueness_of :name
-  validates_presence_of :name
-  validates_presence_of :status
+  validates :name, uniqueness: true
+  validates :name, presence: true
+  validates :status, presence: true
 end

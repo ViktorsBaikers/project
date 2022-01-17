@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :teams
   resources :groups
   resources :games
-  root 'game_tournaments#index'
+  root "game_tournaments#index"
 
   resources :game_tournaments do
     member do

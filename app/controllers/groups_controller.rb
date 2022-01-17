@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Groups
 class GroupsController < ApplicationController
   before_action :set_group, only: %i[show edit update destroy]
 
@@ -25,7 +26,9 @@ class GroupsController < ApplicationController
 
     respond_to do |format|
       if @group.save
-        format.html { redirect_to group_url(@group), notice: 'Group was successfully created.' }
+        format.html do
+          redirect_to group_url(@group), notice: "Group was successfully created."
+        end
         format.json { render :show, status: :created, location: @group }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +41,9 @@ class GroupsController < ApplicationController
   def update
     respond_to do |format|
       if @group.update(group_params)
-        format.html { redirect_to group_url(@group), notice: 'Group was successfully updated.' }
+        format.html do
+          redirect_to group_url(@group), notice: "Group was successfully updated."
+        end
         format.json { render :show, status: :ok, location: @group }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -49,23 +54,23 @@ class GroupsController < ApplicationController
 
   # DELETE /groups/1 or /groups/1.json
   def destroy
-    @group.destroy
+    @group.destroy!
 
     respond_to do |format|
-      format.html { redirect_to groups_url, notice: 'Group was successfully destroyed.' }
-      format.json { head :no_content }
+      format.html { redirect_to groups_url, notice: "Group was successfully destroyed." }
+      format.json { head(:no_content) }
     end
   end
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_group
-    @group = Group.find(params[:id])
-  end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_group
+      @group = Group.find(params[:id])
+    end
 
-  # Only allow a list of trusted parameters through.
-  def group_params
-    params.require(:group).permit(:name, :tournament_id, :team_ids)
-  end
+    # Only allow a list of trusted parameters through.
+    def group_params
+      params.require(:group).permit(:name, :tournament_id, :team_ids)
+    end
 end

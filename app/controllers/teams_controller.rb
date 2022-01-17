@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Teams
 class TeamsController < ApplicationController
   before_action :set_team, only: %i[show edit update destroy]
 
@@ -25,7 +26,9 @@ class TeamsController < ApplicationController
 
     respond_to do |format|
       if @team.save
-        format.html { redirect_to team_url(@team), notice: 'Team was successfully created.' }
+        format.html do
+          redirect_to team_url(@team), notice: "Team was successfully created."
+        end
         format.json { render :show, status: :created, location: @team }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +41,9 @@ class TeamsController < ApplicationController
   def update
     respond_to do |format|
       if @team.update(team_params)
-        format.html { redirect_to team_url(@team), notice: 'Team was successfully updated.' }
+        format.html do
+          redirect_to team_url(@team), notice: "Team was successfully updated."
+        end
         format.json { render :show, status: :ok, location: @team }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -49,23 +54,23 @@ class TeamsController < ApplicationController
 
   # DELETE /teams/1 or /teams/1.json
   def destroy
-    @team.destroy
+    @team.destroy!
 
     respond_to do |format|
-      format.html { redirect_to teams_url, notice: 'Team was successfully destroyed.' }
-      format.json { head :no_content }
+      format.html { redirect_to teams_url, notice: "Team was successfully destroyed." }
+      format.json { head(:no_content) }
     end
   end
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_team
-    @team = Team.find(params[:id])
-  end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_team
+      @team = Team.find(params[:id])
+    end
 
-  # Only allow a list of trusted parameters through.
-  def team_params
-    params.require(:team).permit(:name, :abbrev, :image)
-  end
+    # Only allow a list of trusted parameters through.
+    def team_params
+      params.require(:team).permit(:name, :abbrev, :image)
+    end
 end

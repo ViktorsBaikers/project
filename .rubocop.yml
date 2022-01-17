@@ -144,7 +144,7 @@ Layout/AccessModifierIndentation:
   # But it can be overridden by setting this parameter
   IndentationWidth: ~
 
-Layout/AlignArguments:
+Layout/ArgumentAlignment:
   Enabled: true
   StyleGuide: '#no-double-indent'
   VersionAdded: '0.68'
@@ -156,16 +156,16 @@ Layout/AlignArguments:
   EnforcedStyle: with_fixed_indentation
   IndentationWidth: ~
 
-Layout/AlignArray:
+Layout/ArrayAlignment:
   Enabled: true
 
 # Align the elements of a hash literal if they span more than one line.
-Layout/AlignHash:
+Layout/HashAlignment:
   EnforcedHashRocketStyle: key
   EnforcedColonStyle: key
   EnforcedLastArgumentHashStyle: always_inspect
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   Description: >-
                  Align the parameters of a method call if they span more
                  than one line.
@@ -355,7 +355,7 @@ Layout/HeredocArgumentClosingParenthesis:
   # buggy, just noise
   Enabled: false
 
-Layout/IndentFirstArgument:
+Layout/FirstArgumentIndentation:
   Enabled: true
   EnforcedStyle: consistent
   # By default, the indentation width from `Layout/IndentationWidth` is used
@@ -377,26 +377,26 @@ Layout/IndentationWidth:
   IgnoredPatterns: []
 
 # Checks the indentation of the first element in an array literal.
-Layout/IndentFirstArrayElement:
+Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
   # By default, the indentation width from `Layout/IndentationWidth` is used
   # But it can be overridden by setting this parameter
   IndentationWidth: ~
 
 # Checks the indentation of assignment RHS, when on a different line from LHS
-Layout/IndentAssignment:
+Layout/AssignmentIndentation:
   # By default, the indentation width from `Layout/IndentationWidth` is used
   # But it can be overridden by setting this parameter
   IndentationWidth: ~
 
 # Checks the indentation of the first key in a hash literal.
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
   # By default, the indentation width from `Layout/IndentationWidth` is used
   # But it can be overridden by setting this parameter
   IndentationWidth: ~
 
-Layout/IndentHeredoc:
+Layout/HeredocIndentation:
   EnforcedStyle: squiggly
 
 Layout/SpaceInLambdaLiteral:
@@ -469,7 +469,7 @@ Layout/MultilineOperationIndentation:
   # But it can be overridden by setting this parameter
   IndentationWidth: 2
 
-Layout/LeadingBlankLines:
+Layout/LeadingEmptyLines:
   Enabled: true
 
 Layout/LeadingCommentSpace:
@@ -572,14 +572,14 @@ Layout/SpaceInsideStringInterpolation:
 Layout/RescueEnsureAlignment:
   Enabled: true
 
-Layout/Tab:
+Layout/IndentationStyle:
   # By default, the indentation width from Layout/IndentationWidth is used
   # But it can be overridden by setting this parameter
   # It is used during auto-correction to determine how many spaces should
   # replace each tab.
   IndentationWidth: ~
 
-Layout/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   EnforcedStyle: final_newline
   SupportedStyles:
     - final_newline
@@ -652,7 +652,7 @@ Naming/FileName:
     - XSS
 
 Naming/HeredocDelimiterNaming:
-  Blacklist:
+  ForbiddenDelimiters:
     - !ruby/regexp '/(^|\s)(EO[A-Z]{1}|END)(\s|$)/'
 
 Naming/HeredocDelimiterCase:
@@ -677,11 +677,11 @@ Naming/PredicateName:
     - has_
     - have_
   # Predicate name prefixes that should be removed.
-  NamePrefixBlacklist:
+  ForbiddenPrefixes:
     - is_
   # Predicate names which, despite having a blacklisted prefix, or no `?`,
   # should still be accepted
-  NameWhitelist:
+  NameAllowedMethods:
     - is_a?
   # Method definition macros for dynamically generated methods.
   MethodDefinitionMacros:
@@ -692,20 +692,20 @@ Naming/PredicateName:
   Exclude:
     - 'spec/**/*'
 
-Naming/UncommunicativeBlockParamName:
+Naming/BlockParameterName:
   # Parameter names may be equal to or greater than this value
   MinNameLength: 1
   AllowNamesEndingInNumbers: true
-  # Whitelisted names that will not register an offense
+  # AllowedMethodsed names that will not register an offense
   AllowedNames: []
   # Blacklisted names that will register an offense
   ForbiddenNames: []
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   # Parameter names may be equal to or greater than this value
   MinNameLength: 3
   AllowNamesEndingInNumbers: true
-  # Whitelisted names that will not register an offense
+  # AllowedMethodsed names that will not register an offense
   AllowedNames:
     - _
     - __
@@ -854,19 +854,19 @@ Style/BlockDelimiters:
     - proc
     - it
 
-Style/BracesAroundHashParameters:
-  EnforcedStyle: no_braces
-  SupportedStyles:
-    # The `braces` style enforces braces around all method parameters that are
-    # hashes.
-    - braces
-    # The `no_braces` style checks that the last parameter doesn't have braces
-    # around it.
-    - no_braces
-    # The `context_dependent` style checks that the last parameter doesn't have
-    # braces around it, but requires braces if the second to last parameter is
-    # also a hash literal.
-    - context_dependent
+#Style/BracesAroundHashParameters:
+#  EnforcedStyle: no_braces
+#  SupportedStyles:
+#    # The `braces` style enforces braces around all method parameters that are
+#    # hashes.
+#    - braces
+#    # The `no_braces` style checks that the last parameter doesn't have braces
+#    # around it.
+#    - no_braces
+#    # The `context_dependent` style checks that the last parameter doesn't have
+#    # braces around it, but requires braces if the second to last parameter is
+#    # also a hash literal.
+#    - context_dependent
 
 Style/ClassAndModuleChildren:
   # Checks the style of children definitions at classes and modules.
@@ -1070,8 +1070,8 @@ Style/InverseMethods:
 
 Style/IpAddresses:
   Enabled: false
-  # Allow strings to be whitelisted
-  Whitelist:
+  # Allow strings to be AllowedAddresses
+  AllowedAddresses:
     - "::"
     # :: is a valid IPv6 address, but could potentially be legitimately in code
 
@@ -1182,7 +1182,7 @@ Style/NegatedIf:
     - postfix
 
 Style/NestedParenthesizedCalls:
-  Whitelist:
+  AllowedMethods:
     - be
     - be_a
     - be_an
@@ -1325,7 +1325,7 @@ Style/SafeNavigation:
   # Safe navigation may cause a statement to start returning `nil` in addition
   # to whatever it used to return.
   ConvertCodeThatCanStartToReturnNil: false
-  Whitelist:
+  AllowedMethods:
     - present?
     - blank?
     - presence
@@ -1483,7 +1483,7 @@ Style/TrivialAccessors:
   # Commonly used in DSLs
   AllowDSLWriters: false
   IgnoreClassMethods: false
-  Whitelist:
+  AllowedMethods:
     - to_ary
     - to_a
     - to_c
@@ -1572,7 +1572,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Max: 6
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 90
   # To make it possible to copy or click on URIs in the code, we allow lines
   # containing a URI to be longer than Max.
@@ -1660,7 +1660,7 @@ Lint/NumberConversion:
   Enabled: false
 
 Lint/SafeNavigationChain:
-  Whitelist:
+  AllowedMethods:
     - present?
     - blank?
     - presence
@@ -1668,7 +1668,7 @@ Lint/SafeNavigationChain:
     - try!
 
 Lint/SafeNavigationConsistency:
-  Whitelist:
+  AllowedMethods:
     - present?
     - blank?
     - presence
@@ -1785,7 +1785,7 @@ Rails/Delegate:
   EnforceForPrefixed: true
 
 Rails/DynamicFindBy:
-  Whitelist:
+  AllowedMethods:
     - find_by_sql
 
 Rails/EnumUniqueness:
@@ -2165,11 +2165,6 @@ RSpec/InstanceVariable:
   AssignmentOnly: false
   StyleGuide: http://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/InstanceVariable
 
-RSpec/InvalidPredicateMatcher:
-  Description: Checks invalid usage for predicate matcher.
-  Enabled: true
-  StyleGuide: http://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/InvalidPredicateMatcher
-
 RSpec/ItBehavesLike:
   Description: Checks that only one `it_behaves_like` style is used.
   Enabled: true
@@ -2344,12 +2339,12 @@ RSpec/VoidExpect:
   Enabled: true
   StyleGuide: http://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/VoidExpect
 
-Capybara/CurrentPathExpectation:
+RSpec/Capybara/CurrentPathExpectation:
   Description: Checks that no expectations are set on Capybara's `current_path`.
   Enabled: true
   StyleGuide: http://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/Capybara/CurrentPathExpectation
 
-Capybara/FeatureMethods:
+RSpec/Capybara/FeatureMethods:
   Description: Checks for consistent method usage in feature specs.
   Enabled: true
   EnabledMethods:
@@ -2358,7 +2353,7 @@ Capybara/FeatureMethods:
     - scenario
   StyleGuide: http://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/Capybara/FeatureMethods
 
-FactoryBot/CreateList:
+RSpec/FactoryBot/CreateList:
   Description: Checks for create_list usage.
   Enabled: true
   EnforcedStyle: create_list

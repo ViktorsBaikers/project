@@ -2,5 +2,5 @@
 
 class Group < ApplicationRecord
   belongs_to :game_tournament
-  validates_presence_of :name
+  validates :name, presence: true
 end

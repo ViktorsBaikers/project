@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Games
 class GamesController < ApplicationController
   before_action :set_game, only: %i[show edit update destroy]
 
@@ -25,7 +26,9 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       if @game.save
-        format.html { redirect_to game_url(@game), notice: 'Game was successfully created.' }
+        format.html do
+          redirect_to game_url(@game), notice: "Game was successfully created."
+        end
         format.json { render :show, status: :created, location: @game }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +41,9 @@ class GamesController < ApplicationController
   def update
     respond_to do |format|
       if @game.update(game_params)
-        format.html { redirect_to game_url(@game), notice: 'Game was successfully updated.' }
+        format.html do
+          redirect_to game_url(@game), notice: "Game was successfully updated."
+        end
         format.json { render :show, status: :ok, location: @game }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -49,23 +54,26 @@ class GamesController < ApplicationController
 
   # DELETE /games/1 or /games/1.json
   def destroy
-    @game.destroy
+    @game.destroy!
 
     respond_to do |format|
-      format.html { redirect_to games_url, notice: 'Game was successfully destroyed.' }
-      format.json { head :no_content }
+      format.html { redirect_to games_url, notice: "Game was successfully destroyed." }
+      format.json { head(:no_content) }
     end
   end
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_game
-    @game = Game.find(params[:id])
-  end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_game
+      @game = Game.find(params[:id])
+    end
 
-  # Only allow a list of trusted parameters through.
-  def game_params
-    params.require(:game).permit(:team_a_id, :team_b_id, :team_a_score, :team_b_score, :tournament_id, :level)
-  end
+    # Only allow a list of trusted parameters through.
+    def game_params
+      params.require(:game).permit(
+        :team_a_id, :team_b_id, :team_a_score, :team_b_score,
+        :tournament_id, :level
+)
+    end
 end

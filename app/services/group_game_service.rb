@@ -11,8 +11,8 @@ class GroupGameService
     groups = Group.where(game_tournament_id: @game_tournament_id)
     new_games_to_insert = []
     groups.each do |group|
-      team_ids = group.team_ids.split(',').map(&:to_i)
-      teams = Team.where('id IN (?)', team_ids)
+      team_ids = group.team_ids.split(",").map(&:to_i)
+      teams = Team.where(id: team_ids)
       # 8 teams in groups indexes
       indexes = [0, 1, 2, 3, 4, 5, 6, 7]
 
@@ -21,15 +21,15 @@ class GroupGameService
         remaining_teams.each do |i|
           next if teams[i].id == elem.id
 
-          result = matchScore
+          result = match_score
           new_games_to_insert << {
             team_a_id: elem.id,
             team_b_id: teams[i].id,
             team_a_score: result[0],
             team_b_score: result[1],
             game_tournament_id: @game_tournament_id,
-            level: 'Group Stage',
-            progress: 'group-stage',
+            level: "Group Stage",
+            progress: "group-stage",
             created_at: DateTime.now,
             updated_at: DateTime.now
           }
@@ -43,10 +43,10 @@ class GroupGameService
 
   private
 
-  def matchScore
-    rndInt1 = Random.rand(1..5)
-    rndInt12 = Random.rand(1..5)
-    # draw is allowed
-    [rndInt1, rndInt12]
-  end
+    def match_score
+      first_team_score = Random.rand(1..5)
+      second_team_score = Random.rand(1..5)
+      # draw is allowed
+      [first_team_score, second_team_score]
+    end
 end
