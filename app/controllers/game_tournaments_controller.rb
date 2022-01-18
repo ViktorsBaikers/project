@@ -140,7 +140,7 @@ class GameTournamentsController < ApplicationController
   end
 
   def matches
-    @matches = Game.where(game_tournament: @game_tournament)
+    @games = Game.where(game_tournament: @game_tournament)
     group_games
     group_a_matches
     group_b_matches
@@ -149,34 +149,34 @@ class GameTournamentsController < ApplicationController
   end
 
   def group_a_matches
-    @groupa_matches = []
-    @groupa_m = @matches.where(
+    @group_a_matches = []
+    @group_a_games = @games.where(
       team_a_id: @group_a_team_ids, team_b_id: @group_a_team_ids,
       progress: Game::GROUP_STAGE
     )
-    generate_team_hash(@groupa_matches, @groupa_m, @group_a_teams)
+    generate_team_hash(@group_a_matches, @group_a_games, @group_a_teams)
   end
 
   def group_b_matches
-    @groupb_matches = []
-    @groupb_m = @matches.where(
+    @group_b_matches = []
+    @group_b_games = @games.where(
       team_a_id: @group_b_team_ids, team_b_id: @group_b_team_ids,
       progress: Game::GROUP_STAGE
     )
-    generate_team_hash(@groupb_matches, @groupb_m, @group_b_teams)
+    generate_team_hash(@group_b_matches, @group_b_games, @group_b_teams)
   end
 
   def play_off_matches
     @play_off_matches = []
     @all_teams = @group_a_teams + @group_b_teams
-    @play_off_m = @matches.where(progress: Game::PLAY_OFF_STAGE)
-    generate_team_hash(@play_off_matches, @play_off_m, @all_teams)
+    @play_off_games = @games.where(progress: Game::PLAY_OFF_STAGE)
+    generate_team_hash(@play_off_matches, @play_off_games, @all_teams)
   end
 
   def final_match
     @final_matches = []
-    @final_match = @matches.where(progress: Game::FINAL_STAGE)
-    generate_team_hash(@final_matches, @final_match, @all_teams)
+    @final_game = @games.where(progress: Game::FINAL_STAGE)
+    generate_team_hash(@final_matches, @final_game, @all_teams)
   end
 
   private

@@ -1,0 +1,98 @@
+:css
+  p {
+      font-size: 10px !important;
+  }
+
+  div {
+      padding: 2px !important;
+      line-height: 0px !important;
+  }
+%p#notice= notice
+%h3 Tournament Matches
+.row
+  .col.col-md-6
+    %h5 Group A Matches
+    - @group_a_matches.each do |match|
+      .row
+        .col.col-md-6
+          %p
+            %img{height: "12px", src: "#{match[:team_a].image}", width: "15px"}/
+            = match[:team_a].name
+        .col.col-md-6
+          %p
+            = match[:team_a_score]
+      .row
+        .col.col-md-6
+          %p
+            %img{height: "12px", src: "#{match[:team_b].image}", width: "15px"}/
+            = match[:team_b].name
+        .col.col-md-6
+          %p
+            = match[:team_b_score]
+      %hr/
+  .col.col-md-6
+    %h5 Group B Matches
+    - @group_b_matches.each do |match|
+      .row
+        .col.col-md-6
+          %p
+            %img{height: "12px", src: "#{match[:team_a].image}", width: "15px"}/
+            = match[:team_a].name
+        .col.col-md-6
+          %p
+            = match[:team_a_score]
+      .row
+        .col.col-md-6
+          %p
+            %img{height: "12px", src: "#{match[:team_b].image}", width: "15px"}/
+            = match[:team_b].name
+        .col.col-md-6
+          %p
+            = match[:team_b_score]
+      %hr/
+%hr/
+%h5 Play-Off Matches
+.row
+  .col.col-md-6
+    - @play_off_matches.each do |match|
+      .row
+        .col.col-md-6
+          %p
+            %img{height: "12px", src: "#{match[:team_a].image}", width: "15px"}/
+            = match[:team_a].name
+        .col.col-md-6
+          %p
+            = match[:team_a_score]
+      .row
+        .col.col-md-6
+          %p
+            %img{height: "12px", src: "#{match[:team_b].image}", width: "15px"}/
+            = match[:team_b].name
+        .col.col-md-6
+          %p
+            = match[:team_b_score]
+      %hr/
+%hr/
+%h5 Final Match
+.row
+  .col.col-md-6
+    - @final_matches.each do |match|
+      .row
+        .col.col-md-6
+          %p
+            %img{height: "12px", src: "#{match[:team_a].image}", width: "15px"}/
+            = match[:team_a].name
+        .col.col-md-6
+          %p
+            = match[:team_a_score]
+      .row
+        .col.col-md-6
+          %p
+            %img{height: "12px", src: "#{match[:team_b].image}", width: "15px"}/
+            = match[:team_b].name
+        .col.col-md-6
+          %p
+            = match[:team_b_score]
+      %hr/
+%br/
+= link_to 'back', :back, class: "btn btn-primary"

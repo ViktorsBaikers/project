@@ -1,0 +1,22 @@
+%p#notice= notice
+%p
+  %strong Team a:
+  = @game.team_a
+%p
+  %strong Team b:
+  = @game.team_b
+%p
+  %strong Team a score:
+  = @game.team_a_score
+%p
+  %strong Team b score:
+  = @game.team_b_score
+%p
+  %strong tournament:
+  = @game.tournament_id
+%p
+  %strong Level:
+  = @game.level
+= link_to 'Edit', edit_game_path(@game)
+|
+= link_to 'Back', games_path

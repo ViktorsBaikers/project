@@ -1,0 +1,26 @@
+%p#notice= notice
+%h1 Games
+%table
+  %thead
+    %tr
+      %th Team a
+      %th Team b
+      %th Team a score
+      %th Team b score
+      %th tournament
+      %th Level
+      %th{colspan: "3"}
+  %tbody
+    - @games.each do |game|
+      %tr
+        %td= game.team_a
+        %td= game.team_b
+        %td= game.team_a_score
+        %td= game.team_b_score
+        %td= game.tournament_id
+        %td= game.level
+        %td= link_to 'Show', game
+        %td= link_to 'Edit', edit_game_path(game)
+        %td= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' }
+%br/
+= link_to 'New Game', new_game_path

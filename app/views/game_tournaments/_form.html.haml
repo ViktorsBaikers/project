@@ -1,0 +1,27 @@
+= form_with(model: game_tournament, local: true) do |form|
+  - if game_tournament.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(game_tournament.errors.count, "error")
+        prohibited this game_tournament from being saved:
+      %ul
+        - game_tournament.errors.full_messages.each do |message|
+          %li= message
+
+  .form-group
+    = form.label :name
+    .row
+      .col-6.col-md-6
+        = form.text_field :name, class:"form-control"
+
+  .form-group
+    = form.label "Select Teams (Select multiple)"
+    %br/
+    .row
+      = form.collection_check_boxes :team_ids, @teams, :id, :name do |b|
+        .col-6.col-md-4
+          = b.check_box
+          = b.label
+
+  .form-group
+    = form.submit class: "btn btn-primary"

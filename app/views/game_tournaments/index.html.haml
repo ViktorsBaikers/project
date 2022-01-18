@@ -1,0 +1,19 @@
+%p#notice= notice
+%h1 Game tournaments
+.table-responsive
+  %table.table
+    %thead
+      %tr
+        %th Name
+        %th Status
+        %th{colspan: "3"}
+    %tbody
+      - @game_tournaments.each do |game_tournament|
+        %tr
+          %td= game_tournament.name
+          %td= game_tournament.status
+          %td= link_to 'Show', game_tournament
+          %td= link_to 'Edit', edit_game_tournament_path(game_tournament)
+          %td= link_to 'Destroy', game_tournament, method: :delete, data: { confirm: 'Are you sure?' }
+%br/
+= link_to 'New tournament', new_game_tournament_path, class: "btn btn-primary"

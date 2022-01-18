@@ -1,0 +1,60 @@
+%p#notice= notice
+%h2
+  = @game_tournament.name
+%h3#teams
+  %Teams>
+  Groups
+.Groups.row
+  #GroupA.col.col-md-6
+    %h3 Group A
+    - @group_a_teams.each do |team|
+      %h5
+        %img{height: "20px", src: "#{team.image}", width: "30px"}/
+        = team.name
+  #GroupB.col.col-md-6
+    %h3 Group B
+    - @group_b_teams.each do |team|
+      %h5
+        %img{height: "20px", src: "#{team.image}", width: "30px"}/
+        = team.name
+%br/
+
+.row
+  .col.col-md-6
+    %p
+      %strong Status:
+      = @game_tournament.status
+  .col.col-md-6
+    %p
+      %strong Progress:
+      = @game_tournament.progress
+  - if @game_tournament.status == GameTournament::STATUS_DONE
+    %p
+      %strong Winner:
+      %img{height: "20px", src: "#{@winner.image}", width: "30px"}/
+      = @winner.name
+    %p
+      %strong Finalist:
+      %img{height: "20px", src: "#{@finalist.image}", width: "30px"}/
+      = @finalist.name
+  - if @game_tournament.status == GameTournament::STATUS_DRAFT
+    = link_to 'Start Group Matches', group_game_game_tournament_path(@game_tournament), class: "btn btn-primary"
+  - if @game_tournament.progress == Game::PLAY_OFF_STAGE
+    .row
+      .col-md-6
+        = link_to 'Play Play-Off', play_off_game_tournament_path(@game_tournament), class: "btn btn-primary"
+      .col-md-6
+        = link_to 'View Result', matches_game_tournament_path(@game_tournament), class: "btn btn-info"
+  - if @game_tournament.progress == Game::FINAL_STAGE
+    .row
+      .col-md-6
+        = link_to 'Play Final Match', final_game_tournament_path(@game_tournament), class: "btn btn-primary"
+      .col-md-6
+        = link_to 'View Result', matches_game_tournament_path(@game_tournament), class: "btn btn-info"
+  - if @game_tournament.progress == Game::COMPLETED
+    .row
+      .col-md-6
+        = link_to 'View Results', matches_game_tournament_path(@game_tournament), class: "btn btn-info"
+        %br/
+        
+  = link_to 'Back', game_tournaments_path, class: 'btn btn-secondary'

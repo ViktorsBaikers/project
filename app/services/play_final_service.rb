@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class PlayFinalService
-  attr_reader :game_tournament_id, :winners
+  attr_reader :game_tournament_id, :winners, :games
 
   def initialize(game_tournament_id)
     @game_tournament_id = game_tournament_id
+    @games = Game.where(game_tournament_id: game_tournament_id, progress: Game::PLAY_OFF_STAGE)
     @winners = []
   end
 
@@ -15,15 +16,11 @@ class PlayFinalService
   private
 
   def play_final_game
-    matches = Game.where(
-      progress: Game::PLAY_OFF_STAGE,
-      game_tournament_id: game_tournament_id
-    )
-    matches.each do |match|
-      if match.team_a_score > match.team_b_score
-        winners << match.team_a_id
+    games.each do |game|
+      if game.team_a_score > game.team_b_score
+        winners << game.team_a_id
       else
-        winners << match.team_b_id
+        winners << game.team_b_id
       end
     end
     finalise_tournament(generate_game)
@@ -45,8 +42,8 @@ class PlayFinalService
   def finalise_tournament(game)
     finalist = \
       if game.team_a_score > game.team_b_score
-                       final_winner = game.team_a_id
-                       game.team_b_id
+        final_winner = game.team_a_id
+        game.team_b_id
       else
         final_winner = game.team_b_id
         game.team_a_id

@@ -20,7 +20,7 @@ class AssignTeamService
     if team_ids.length.zero?
       @teams = Team.ids.sample(16) # We might face an issue here if we would have a lot of teams
     elsif team_ids.length < 16
-      @teams = team_ids + Team.where.not(id: team_ids).ids.sample(16 - team_ids.length)
+      @teams = (team_ids + Team.where.not(id: team_ids).ids.sample(16 - team_ids.length)).shuffle
     elsif team_ids.length >= 16
       @teams = team_ids.sample(16)
     end

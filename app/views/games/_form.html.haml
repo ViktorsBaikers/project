@@ -1,0 +1,29 @@
+= form_with(model: game, local: true) do |form|
+  - if game.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(game.errors.count, "error")
+        prohibited this game from being saved:
+      %ul
+        - game.errors.full_messages.each do |message|
+          %li= message
+  .field
+    = form.label :team_a
+    = form.number_field :team_a
+  .field
+    = form.label :team_b
+    = form.number_field :team_b
+  .field
+    = form.label :team_a_score
+    = form.number_field :team_a_score
+  .field
+    = form.label :team_b_score
+    = form.number_field :team_b_score
+  .field
+    = form.label :tournament_id
+    = form.number_field :tournament_id
+  .field
+    = form.label :level
+    = form.text_field :level
+  .actions
+    = form.submit
