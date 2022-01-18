@@ -10,15 +10,15 @@ class PlayFinalService
   def play_final_game
     groups = Group.where(game_tournament_id: @game_tournament_id)
     matches = Game.where(
-      progress: "play-off-stage",
+      progress: Game::PLAY_OFF_STAGE,
       game_tournament_id: @game_tournament_id
 )
     winners = []
-    matches.each do |m|
-      winners << if m.team_a_score > m.team_b_score
-                   m.team_a_id
+    matches.each do |match|
+      winners << if match.team_a_score > match.team_b_score
+                   match.team_a_id
                  else
-                   m.team_b_id
+                   match.team_b_id
                  end
     end
     # first play off
@@ -30,7 +30,7 @@ class PlayFinalService
       team_b_score: play_final[1],
       game_tournament_id: @game_tournament_id,
       level: "Play Off Stage",
-      progress: "final-stage"
+      progress: Game::FINAL_STAGE
     )
     # finalize tournament
     finalise_tournament(game)

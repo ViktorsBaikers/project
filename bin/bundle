@@ -113,6 +113,6 @@ m = Module.new do
   end
 end
 
-m.load_bundler!
+match.load_bundler!
 
-load Gem.bin_path('bundler', 'bundle') if m.invoked_as_script?
+load Gem.bin_path('bundler', 'bundle') if match.invoked_as_script?

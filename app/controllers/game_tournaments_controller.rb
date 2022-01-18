@@ -3,7 +3,7 @@
 # Game Tournament
 class GameTournamentsController < ApplicationController
   before_action :set_game_tournament,
-    only: %i[show edit update destroy matches group_game play_off final]
+                only: %i[show edit update destroy matches group_game play_off final]
 
   # GET /game_tournaments or /game_tournaments.json
   def index
@@ -12,11 +12,9 @@ class GameTournamentsController < ApplicationController
 
   # GET /game_tournaments/1 or /game_tournaments/1.json
   def show
-    return unless @game_tournament.status == "done"
-
     group_games
+    return unless @game_tournament.status == GameTournament::STATUS_DONE
 
-    @game_tournament.status == "done"
     @winner = Team.find(@game_tournament.winner_id)
     @finalist = Team.find(@game_tournament.finalist_id)
   end
@@ -31,18 +29,18 @@ class GameTournamentsController < ApplicationController
   def edit; end
 
   def group_game
-    GroupGameService.new(@game_tournament.id).play_group_game
+    GroupGameService.new(@game_tournament.id).generate_scores
     respond_to do |format|
-      if @game_tournament.update(status: "in_progress", progress: "play-off-stage")
+      if @game_tournament.update(status: GameTournament::STATUS_IN_PROGRESS, progress: Game::PLAY_OFF_STAGE)
         format.html do
           redirect_to game_tournament_url(@game_tournament),
-            notice: "tournament is in progress."
+                      notice: "tournament is in progress."
         end
         format.json { render :show, status: :ok, location: @game_tournament }
       else
         format.html do
           redirect_to game_tournament_url(@game_tournament),
-            notice: "problem playing play group stages."
+                      notice: "problem playing play group stages."
         end
         format.json { render :show, status: 400, location: @game_tournament }
       end
@@ -50,18 +48,18 @@ class GameTournamentsController < ApplicationController
   end
 
   def play_off
-    PlayOffService.new(@game_tournament.id).play_play_off_game
+    PlayOffService.new(@game_tournament.id).generate_play_off_game
     respond_to do |format|
-      if @game_tournament.update(progress: "final-stage")
+      if @game_tournament.update(progress: Game::FINAL_STAGE)
         format.html do
           redirect_to game_tournament_url(@game_tournament),
-            notice: "tournament play-off completed."
+                      notice: "tournament play-off completed."
         end
         format.json { render :show, status: :ok, location: @game_tournament }
       else
         format.html do
           redirect_to game_tournament_url(@game_tournament),
-            notice: "problem playing play off."
+                      notice: "problem playing play off."
         end
         format.json { render :show, status: 400, location: @game_tournament }
       end
@@ -73,18 +71,18 @@ class GameTournamentsController < ApplicationController
     respond_to do |format|
       if @game_tournament.update(
         finalist_id: result[1], winner_id: result[0],
-        status: "done", progress: "completed"
-)
+        status: GameTournament::STATUS_DONE, progress: Game::COMPLETED
+      )
 
         format.html do
           redirect_to game_tournament_url(@game_tournament),
-            notice: "tournament finals completed."
+                      notice: "tournament finals completed."
         end
         format.json { render :show, status: :ok, location: @game_tournament }
       else
         format.html do
           redirect_to game_tournament_url(@game_tournament),
-            notice: "problem playing final."
+                      notice: "problem playing final."
         end
         format.json { render :show, status: 400, location: @game_tournament }
       end
@@ -94,19 +92,12 @@ class GameTournamentsController < ApplicationController
   # POST /game_tournaments or /game_tournaments.json
   def create
     @game_tournament = GameTournament.new(game_tournament_params)
-    @teams = Team.all
-    @game_tournament.status = "draft"
-    @game_tournament.progress = "group-stage"
-    logger.info("params #{ game_tournament_params[:team_ids].inspect }")
     respond_to do |format|
       if @game_tournament.save
-        AssignTeamService.new(
-          game_tournament_params[:team_ids],
-          @game_tournament.id
-).process_team_ids
+        AssignTeamService.new(game_tournament_params[:team_ids], @game_tournament.id).assign
         format.html do
           redirect_to game_tournament_url(@game_tournament),
-            notice: "tournament was successfully created."
+                      notice: "tournament was successfully created."
         end
         format.json { render :show, status: :created, location: @game_tournament }
       else
@@ -124,7 +115,7 @@ class GameTournamentsController < ApplicationController
       if @game_tournament.update(game_tournament_params)
         format.html do
           redirect_to game_tournament_url(@game_tournament),
-            notice: "tournament was successfully updated."
+                      notice: "tournament was successfully updated."
         end
         format.json { render :show, status: :ok, location: @game_tournament }
       else
@@ -148,78 +139,78 @@ class GameTournamentsController < ApplicationController
   end
 
   def matches
+    @matches = Game.where(game_tournament: @game_tournament)
     group_games
-    group_a_team_ids = @groupa.team_ids.split(",").map(&:to_i)
-    group_b_team_ids = @groupb.team_ids.split(",").map(&:to_i)
-    @matches = Game.where(game_tournament_id: @game_tournament.id)
-    @groupa_m =
-      @matches.select do |m|
-        m.progress == "group-stage" && group_a_team_ids.include?(m.team_a_id) && group_a_team_ids.include?(m.team_b_id)
-      end
-    @groupb_m =
-      @matches.select do |m|
-        m.progress == "group-stage" && group_b_team_ids.include?(m.team_a_id) && group_b_team_ids.include?(m.team_b_id)
-      end
+    group_a_matches
+    group_b_matches
+    play_off_matches
+    final_match
+  end
 
+  def group_a_matches
     @groupa_matches = []
-    @groupa_m.each do |m|
-      @groupa_matches << {
-        "team_a" => @group_a_teams.find { |t| t.id == m.team_a_id },
-        "team_b" => @group_a_teams.find { |t| t.id == m.team_b_id },
-        "team_a_score" => m.team_a_score, "team_b_score" => m.team_b_score, "progress" => m.progress
-      }
-    end
+    @groupa_m = @matches.where(
+      team_a_id: @group_a_team_ids, team_b_id: @group_a_team_ids,
+      progress: Game::GROUP_STAGE
+    )
+    generate_team_hash(@groupa_matches, @groupa_m, @group_a_teams)
+  end
 
+  def group_b_matches
     @groupb_matches = []
-    @groupb_m.each do |m|
-      @groupb_matches << {
-        "team_a" => @group_b_teams.find { |t| t.id == m.team_a_id },
-        "team_b" => @group_b_teams.find { |t| t.id == m.team_b_id },
-        "team_a_score" => m.team_a_score, "team_b_score" => m.team_b_score, "progress" => m.progress
-      }
-    end
+    @groupb_m = @matches.where(
+      team_a_id: @group_b_team_ids, team_b_id: @group_b_team_ids,
+      progress: Game::GROUP_STAGE
+    )
+    generate_team_hash(@groupb_matches, @groupb_m, @group_b_teams)
+  end
 
-    @all_teams = @group_a_teams + @group_b_teams
-    @play_off_m = @matches.select { |m| m.progress == "play-off-stage" }
-
+  def play_off_matches
     @play_off_matches = []
-    @play_off_m.each do |m|
-      @play_off_matches << {
-        "team_a" => @all_teams.find { |t| t.id == m.team_a_id },
-        "team_b" => @all_teams.find { |t| t.id == m.team_b_id },
-        "team_a_score" => m.team_a_score, "team_b_score" => m.team_b_score, "progress" => m.progress
-      }
-    end
+    @all_teams = @group_a_teams + @group_b_teams
+    @play_off_m = @matches.where(progress: Game::PLAY_OFF_STAGE)
+    generate_team_hash(@play_off_matches, @play_off_m, @all_teams)
+  end
 
-    @final_m = @matches.select { |m| m.progress == "final-stage" }
-
+  def final_match
     @final_matches = []
-    @final_m.each do |m|
-      @final_matches << {
-        "team_a" => @all_teams.find { |t| t.id == m.team_a_id },
-        "team_b" => @all_teams.find { |t| t.id == m.team_b_id },
-        "team_a_score" => m.team_a_score, "team_b_score" => m.team_b_score, "progress" => m.progress
-      }
-    end
+    @final_match = @matches.where(progress: Game::FINAL_STAGE)
+    generate_team_hash(@final_matches, @final_match, @all_teams)
   end
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_game_tournament
-      @game_tournament = GameTournament.find(params[:id])
+  def generate_team_hash(matches, current_match_progress, team_list)
+    current_match_progress.each do |match|
+      matches << {
+        team_a: team_list.find { |t| t.id == match.team_a_id },
+        team_b: team_list.find { |t| t.id == match.team_b_id },
+        team_a_score: match.team_a_score,
+        team_b_score: match.team_b_score,
+        progress: match.progress
+      }
     end
+  end
 
-    def group_games
-      groups = Group.where(game_tournament_id: @game_tournament.id)
-      @groupa = groups.find { |g| g.name == "A" }
-      @groupb = groups.find { |g| g.name == "B" }
-      @group_a_teams = Team.where(id: @groupa.team_ids.split(",").map(&:to_i))
-      @group_b_teams = Team.where(id: @groupb.team_ids.split(",").map(&:to_i))
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_game_tournament
+    @game_tournament = GameTournament.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def game_tournament_params
-      params.require(:game_tournament).permit(:name, team_ids: [])
-    end
+  def group_games
+    groups = Group.where(game_tournament: @game_tournament)
+
+    @group_a = groups.where(name: Group::GROUP_A)[0]
+    @group_b = groups.where(name: Group::GROUP_B)[0]
+
+    @group_a_team_ids = JSON.parse(@group_a.team_ids)
+    @group_b_team_ids = JSON.parse(@group_b.team_ids)
+    @group_a_teams = Team.where(id: @group_a_team_ids)
+    @group_b_teams = Team.where(id: @group_b_team_ids)
+  end
+
+  # Only allow a list of trusted parameters through.
+  def game_tournament_params
+    params.require(:game_tournament).permit(:name, team_ids: [])
+  end
 end

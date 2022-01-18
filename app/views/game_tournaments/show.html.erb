@@ -38,7 +38,7 @@
                                     
         </div>
 
-<%if @game_tournament.status == "done"%>
+<%if @game_tournament.status == GameTournament::STATUS_DONE %>
 <p>
   <strong>Winner:</strong>
    <img src="<%=@winner.image%>" width='15px' height='12px'/> <%= @winner.name %> </p>
@@ -49,10 +49,10 @@
 </p>
 <%end%>
 
-<%if @game_tournament.status == "draft"%>
+<%if @game_tournament.status == GameTournament::STATUS_DRAFT %>
 <%= link_to 'Start Group Matches', group_game_game_tournament_path(@game_tournament), class: "btn btn-primary" %>
 <%end%>
-<%if @game_tournament.progress == "play-off-stage"%>
+<%if @game_tournament.progress == Game::PLAY_OFF_STAGE%>
 <div class="row">
   <div class="col-md-6">
     <%= link_to 'Play Play-Off', play_off_game_tournament_path(@game_tournament), class: "btn btn-warning" %>
@@ -62,7 +62,7 @@
   </div>
 </div>
   <%end%>
-<%if @game_tournament.progress == "final-stage"%>
+<%if @game_tournament.progress == Game::FINAL_STAGE%>
 <div class="row">
   <div class="col-md-6">
   <%= link_to 'Play Final Match', final_game_tournament_path(@game_tournament), class: "btn btn-primary" %>
