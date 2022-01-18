@@ -10,13 +10,6 @@ RSpec.describe PlayOffService, type: :service do
   let(:game_tournament) { create :game_tournament }
   let(:group_1) { create :group, game_tournament: game_tournament, team_ids: [team_1.id, team_2.id] }
   let(:group_2) { create :group, game_tournament: game_tournament, team_ids: [team_3.id, team_4.id] }
-  # let(:game) do
-  #   create :game,
-  #          team_a_id: team_1.id,
-  #          team_b_id: team_2.id,
-  #          team_b_score: 5,
-  #          game_tournament: game_tournament
-  # end
 
   context "#generate_scores" do
     it "returns created game scores for each team" do
@@ -25,7 +18,7 @@ RSpec.describe PlayOffService, type: :service do
       group_2.save
 
       service.generate_play_off_game
-      
+
       expect(game_tournament.games.count).to eq(2)
 
       expect(game_tournament.games[0].team_a_id).to eq(team_2.id)
