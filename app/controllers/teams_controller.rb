@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# Teams
 class TeamsController < ApplicationController
   before_action :set_team, only: %i[show edit update destroy]
 
@@ -64,13 +63,13 @@ class TeamsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_team
-      @team = Team.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_team
+    @team = Team.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def team_params
-      params.require(:team).permit(:name, :abbrev, :image)
-    end
+  # Only allow a list of trusted parameters through.
+  def team_params
+    params.require(:team).permit(:name, :abbrev, :image)
+  end
 end

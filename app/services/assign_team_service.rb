@@ -28,11 +28,11 @@ class AssignTeamService
 
   private
 
-    def assign_teams(team_ids, game_tournament_id, group_name)
-      Group.create!(
-        name: group_name,
-        game_tournament_id: game_tournament_id,
-        team_ids: team_ids
-      )
-    end
+  def assign_teams(team_ids, game_tournament_id, group_name)
+    Group.create!(
+      name: group_name,
+      game_tournament_id: game_tournament_id,
+      team_ids: team_ids
+    )
+  end
 end

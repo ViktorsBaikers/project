@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# Groups
 class GroupsController < ApplicationController
   before_action :set_group, only: %i[show edit update destroy]
 
@@ -64,13 +63,13 @@ class GroupsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_group
-      @group = Group.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_group
+    @group = Group.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def group_params
-      params.require(:group).permit(:name, :tournament_id, :team_ids)
-    end
+  # Only allow a list of trusted parameters through.
+  def group_params
+    params.require(:group).permit(:name, :tournament_id, :team_ids)
+  end
 end
