@@ -18,9 +18,9 @@ class AssignTeamService
 
   def process_team_ids
     if team_ids.length.zero?
-      @teams = Team.pluck(:id).sample(16) # We might face an issue here if we would have a lot of teams
+      @teams = Team.ids.sample(16) # We might face an issue here if we would have a lot of teams
     elsif team_ids.length < 16
-      @teams = team_ids + Team.where.not(id: team_ids).pluck(:id).sample(16 - team_ids.length)
+      @teams = team_ids + Team.where.not(id: team_ids).ids.sample(16 - team_ids.length)
     elsif team_ids.length >= 16
       @teams = team_ids.sample(16)
     end
@@ -28,11 +28,11 @@ class AssignTeamService
 
   private
 
-  def assign_teams(team_ids, game_tournament_id, group_name)
-    Group.create!(
-      name: group_name,
-      game_tournament_id: game_tournament_id,
-      team_ids: team_ids
-    )
-  end
+    def assign_teams(team_ids, game_tournament_id, group_name)
+      Group.create!(
+        name: group_name,
+        game_tournament_id: game_tournament_id,
+        team_ids: team_ids
+      )
+    end
 end
