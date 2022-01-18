@@ -12,7 +12,7 @@ RSpec.describe PlayOffService, type: :service do
   let(:group_2) { create :group, game_tournament: game_tournament, team_ids: [team_3.id, team_4.id] }
 
   context "#generate_scores" do
-    it "returns created game scores for each team" do
+    it "returns play-off games" do
       # We should save groups before executing the service
       group_1.save
       group_2.save
