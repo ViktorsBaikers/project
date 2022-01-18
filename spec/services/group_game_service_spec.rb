@@ -21,6 +21,5 @@ RSpec.describe GroupGameService, type: :service do
       # Each team plays 7 matches. 16 x 7 = 112
       expect(game_tournament.games.count).to eq(112)
     end
-
   end
 end

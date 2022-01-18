@@ -27,6 +27,5 @@ RSpec.describe PlayOffService, type: :service do
       expect(game_tournament.games[1].team_a_id).to eq(team_4.id)
       expect(game_tournament.games[1].team_b_id).to eq(team_1.id)
     end
-
   end
 end
