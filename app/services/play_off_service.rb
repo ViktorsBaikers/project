@@ -22,7 +22,7 @@ class PlayOffService
     first_play_off_game(new_games_to_insert, winners, losers)
     second_play_off_game(new_games_to_insert, winners, losers)
 
-    Game.insert_all(new_games_to_insert)
+    Game.insert_all(new_games_to_insert) # Refactor. Use create instead of insert_all
   end
 
   def generate_match_result(winners, losers)

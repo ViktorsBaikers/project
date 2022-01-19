@@ -29,7 +29,7 @@ class GroupGameService
         end
       end
     end
-    Game.insert_all(new_games_to_insert)
+    Game.insert_all(new_games_to_insert) # Refactor. Use create instead of insert_all
   end
 
   def game_data_hash(team_a, team_b)

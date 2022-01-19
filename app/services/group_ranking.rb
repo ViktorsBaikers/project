@@ -26,7 +26,7 @@ class GroupRanking
   end
 
   def calculate_rank(team_id)
-    filtered_games = games.where(team_a_id: team_id).or(games.where(team_b_id: team_id))
+    filtered_games = games.select {|game| game.team_a_id == team_id || game.team_b_id == team_id}
     points = 0
     goals = 0
 

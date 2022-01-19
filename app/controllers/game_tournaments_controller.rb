@@ -93,6 +93,7 @@ class GameTournamentsController < ApplicationController
   # POST /game_tournaments or /game_tournaments.json
   def create
     @game_tournament = GameTournament.new(game_tournament_params)
+    @teams = Team.all
     respond_to do |format|
       if @game_tournament.save
         AssignTeamService.new(game_tournament_params[:team_ids], @game_tournament.id).assign
